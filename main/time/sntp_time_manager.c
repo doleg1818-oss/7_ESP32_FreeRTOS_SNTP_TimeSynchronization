@@ -360,7 +360,48 @@ esp_err_t sntp_time_manager_get_sync_age(uint32_t *age_seconds)
 	return ESP_OK;
 }
 
-
+void test_sntp(void)
+{
+	uint32_t count = 0;
+	
+	while(1)
+	{
+		time_t timestamp;
+	   
+	 	if(sntp_time_manager_get_timestamp(&timestamp) == ESP_OK)
+	   	{
+			ESP_LOGI(TAG, "Timestamp: %lld", (long long)timestamp);
+	   	}
+	   
+	   	struct tm local_time;
+	   	if(sntp_time_manager_get_localtime(&local_time) == ESP_OK)
+	   	{
+			char buffer[64] = {0,};
+		   	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &local_time);
+		 	ESP_LOGI(TAG, "Local time: %s", buffer);
+		 	
+		 	uint32_t sinc_age = 0;
+		 	if(sntp_time_manager_get_sync_age(&sinc_age) == ESP_OK)
+		 	{
+				ESP_LOGI(TAG, "Last SNTP sinc age: %" PRIu32, sinc_age);	 
+			}
+	   	}
+	  	
+	   	count++;
+	   	if(count >= 20)
+	   	{
+			sntp_time_satatus_t status;
+		   	if(sntp_time_manager_get_status(&status) == ESP_OK)
+		   	{
+				ESP_LOGI(TAG, "Time state=%s", sntp_time_manager_state_to_string(status.state));
+			   	ESP_LOGI(TAG, "Sinc count=%" PRIu32, status.sync_count);
+			   	ESP_LOGI(TAG, "Last sync=%lld", (long long)status.last_sinc_timestamp);
+		   	}
+		   	count = 0;
+	   	}
+	   	vTaskDelay(pdMS_TO_TICKS(1000));	
+	}
+}
 
 
 

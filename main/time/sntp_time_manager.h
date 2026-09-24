@@ -53,6 +53,7 @@ const char * sntp_time_manager_state_to_string(sntp_time_state_t state);
 
 esp_err_t sntp_time_manager_get_sync_age(uint32_t *age_seconds);
 void sntp_time_deinit(void);
+void test_sntp(void);
 
 
 #endif /* MAIN_TIME_SNTP_TIME_MANAGER_H_ */
