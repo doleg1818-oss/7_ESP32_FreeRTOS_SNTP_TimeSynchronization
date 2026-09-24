@@ -3,9 +3,10 @@
 
 idf_component_register(
     SRCS 
-    	"app/main.c" 
+    	"main.c" 
     	"wifi/wifi_manager.c" 
     	"wifi/wifi_manager_test.c" 
+    	"time/sntp_time_manager.c"
     INCLUDE_DIRS         
         "."
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
